@@ -27,8 +27,9 @@ arquitetura-de-computadores/
 ├── types.h
 └── README.md
 ⚙️ Componentes
-types.h
 
+**types.h
+**
 Arquivo responsável por centralizar:
 
 Constantes globais
@@ -43,20 +44,23 @@ IF/ID
 ID/EX
 EX/MEM
 MEM/WB
-memory.c
 
+
+**memory.c
+**
 Responsável pelo gerenciamento do estado persistente do simulador:
 
 Inicialização das memórias
 Inicialização dos registradores
 Inicialização do PC
 Carregamento do programa na memória de instruções
-memory.h
+
+**memory.h**
 
 Header contendo as funções públicas do módulo de memória.
 
-main.c
-
+**main.c
+**
 Arquivo principal utilizado para:
 
 Inicializar o simulador
