@@ -252,6 +252,6 @@ Este projeto foi desenvolvido com foco em:
 
 # 👩‍💻 Autores
 
-Amanda Caroline Oliveira Jorge
-Caua
-Salomao
+- Amanda Caroline Oliveira Jorge
+- Caua
+- Salomao
