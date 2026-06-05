@@ -10,5 +10,6 @@ void stage_MEM(void);
 void stage_WB(void);
 
 void stages_print_stats(int total_cycles, int total_stalls);
+void stages_reset(void);
 
 #endif

@@ -1,0 +1,667 @@
+{
+  "cycles": [
+    {
+      "cycle": 0,
+      "pc": 4,
+      "stall": 0,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0x2008000A",
+        "pc_plus_4": 4,
+        "nop": 0
+      },
+      "id_ex": {
+        "instruction": "0x00000000",
+        "read_data1": 0,
+        "read_data2": 0,
+        "imm": 0,
+        "rs": 0,
+        "rt": 0,
+        "rd": 0,
+        "rt_rd": 0,
+        "RegWrite": 0,
+        "ALUSrc": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "ex_mem": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "read_data2": 0,
+        "write_reg": 0,
+        "branch_target": "0x00000000",
+        "RegWrite": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "mem_wb": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "mem_data": 0,
+        "write_reg": 0,
+        "RegWrite": 0,
+        "MemtoReg": 0,
+        "nop": 1
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "cycle": 1,
+      "pc": 8,
+      "stall": 0,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0x01008020",
+        "pc_plus_4": 8,
+        "nop": 0
+      },
+      "id_ex": {
+        "instruction": "0x2008000A",
+        "read_data1": 0,
+        "read_data2": 0,
+        "imm": 10,
+        "rs": 0,
+        "rt": 8,
+        "rd": 0,
+        "rt_rd": 8,
+        "RegWrite": 1,
+        "ALUSrc": 1,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 0
+      },
+      "ex_mem": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "read_data2": 0,
+        "write_reg": 0,
+        "branch_target": "0x00000000",
+        "RegWrite": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "mem_wb": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "mem_data": 0,
+        "write_reg": 0,
+        "RegWrite": 0,
+        "MemtoReg": 0,
+        "nop": 1
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "cycle": 2,
+      "pc": 12,
+      "stall": 0,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0xAD300000",
+        "pc_plus_4": 12,
+        "nop": 0
+      },
+      "id_ex": {
+        "instruction": "0x01008020",
+        "read_data1": 0,
+        "read_data2": 0,
+        "imm": -32736,
+        "rs": 8,
+        "rt": 0,
+        "rd": 16,
+        "rt_rd": 16,
+        "RegWrite": 1,
+        "ALUSrc": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 0
+      },
+      "ex_mem": {
+        "instruction": "0x2008000A",
+        "alu_result": 10,
+        "read_data2": 0,
+        "write_reg": 8,
+        "branch_target": "0x0000002C",
+        "RegWrite": 1,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 0
+      },
+      "mem_wb": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "mem_data": 0,
+        "write_reg": 0,
+        "RegWrite": 0,
+        "MemtoReg": 0,
+        "nop": 1
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "cycle": 3,
+      "pc": 16,
+      "stall": 0,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0x8D2A0000",
+        "pc_plus_4": 16,
+        "nop": 0
+      },
+      "id_ex": {
+        "instruction": "0xAD300000",
+        "read_data1": 256,
+        "read_data2": 0,
+        "imm": 0,
+        "rs": 9,
+        "rt": 16,
+        "rd": 0,
+        "rt_rd": 16,
+        "RegWrite": 0,
+        "ALUSrc": 1,
+        "MemRead": 0,
+        "MemWrite": 1,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 0
+      },
+      "ex_mem": {
+        "instruction": "0x01008020",
+        "alu_result": 10,
+        "read_data2": 0,
+        "write_reg": 16,
+        "branch_target": "0xFFFE0088",
+        "RegWrite": 1,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 0
+      },
+      "mem_wb": {
+        "instruction": "0x2008000A",
+        "alu_result": 10,
+        "mem_data": 0,
+        "write_reg": 8,
+        "RegWrite": 1,
+        "MemtoReg": 0,
+        "nop": 0
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "cycle": 4,
+      "pc": 20,
+      "stall": 0,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0x214B0005",
+        "pc_plus_4": 20,
+        "nop": 0
+      },
+      "id_ex": {
+        "instruction": "0x8D2A0000",
+        "read_data1": 256,
+        "read_data2": 0,
+        "imm": 0,
+        "rs": 9,
+        "rt": 10,
+        "rd": 0,
+        "rt_rd": 10,
+        "RegWrite": 1,
+        "ALUSrc": 1,
+        "MemRead": 1,
+        "MemWrite": 0,
+        "MemtoReg": 1,
+        "Branch": 0,
+        "nop": 0
+      },
+      "ex_mem": {
+        "instruction": "0xAD300000",
+        "alu_result": 256,
+        "read_data2": 10,
+        "write_reg": 16,
+        "branch_target": "0x0000000C",
+        "RegWrite": 0,
+        "MemRead": 0,
+        "MemWrite": 1,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 0
+      },
+      "mem_wb": {
+        "instruction": "0x01008020",
+        "alu_result": 10,
+        "mem_data": 0,
+        "write_reg": 16,
+        "RegWrite": 1,
+        "MemtoReg": 0,
+        "nop": 0
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "cycle": 5,
+      "pc": 20,
+      "stall": 1,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0x214B0005",
+        "pc_plus_4": 20,
+        "nop": 0
+      },
+      "id_ex": {
+        "instruction": "0x00000000",
+        "read_data1": 0,
+        "read_data2": 0,
+        "imm": 0,
+        "rs": 0,
+        "rt": 0,
+        "rd": 0,
+        "rt_rd": 0,
+        "RegWrite": 0,
+        "ALUSrc": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "ex_mem": {
+        "instruction": "0x8D2A0000",
+        "alu_result": 256,
+        "read_data2": 0,
+        "write_reg": 10,
+        "branch_target": "0x00000010",
+        "RegWrite": 1,
+        "MemRead": 1,
+        "MemWrite": 0,
+        "MemtoReg": 1,
+        "Branch": 0,
+        "nop": 0
+      },
+      "mem_wb": {
+        "instruction": "0xAD300000",
+        "alu_result": 256,
+        "mem_data": 0,
+        "write_reg": 16,
+        "RegWrite": 0,
+        "MemtoReg": 0,
+        "nop": 0
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "cycle": 6,
+      "pc": 24,
+      "stall": 0,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0x110A0001",
+        "pc_plus_4": 24,
+        "nop": 0
+      },
+      "id_ex": {
+        "instruction": "0x214B0005",
+        "read_data1": 0,
+        "read_data2": 0,
+        "imm": 5,
+        "rs": 10,
+        "rt": 11,
+        "rd": 0,
+        "rt_rd": 11,
+        "RegWrite": 1,
+        "ALUSrc": 1,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 0
+      },
+      "ex_mem": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "read_data2": 0,
+        "write_reg": 0,
+        "branch_target": "0x00000000",
+        "RegWrite": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "mem_wb": {
+        "instruction": "0x8D2A0000",
+        "alu_result": 256,
+        "mem_data": 10,
+        "write_reg": 10,
+        "RegWrite": 1,
+        "MemtoReg": 1,
+        "nop": 0
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "cycle": 7,
+      "pc": 28,
+      "stall": 0,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0x01608820",
+        "pc_plus_4": 28,
+        "nop": 0
+      },
+      "id_ex": {
+        "instruction": "0x110A0001",
+        "read_data1": 10,
+        "read_data2": 10,
+        "imm": 1,
+        "rs": 8,
+        "rt": 10,
+        "rd": 0,
+        "rt_rd": 10,
+        "RegWrite": 0,
+        "ALUSrc": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 1,
+        "nop": 0
+      },
+      "ex_mem": {
+        "instruction": "0x214B0005",
+        "alu_result": 15,
+        "read_data2": 0,
+        "write_reg": 11,
+        "branch_target": "0x00000028",
+        "RegWrite": 1,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 0
+      },
+      "mem_wb": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "mem_data": 0,
+        "write_reg": 0,
+        "RegWrite": 0,
+        "MemtoReg": 0,
+        "nop": 1
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "cycle": 8,
+      "pc": 28,
+      "stall": 0,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0x00000000",
+        "pc_plus_4": 0,
+        "nop": 1
+      },
+      "id_ex": {
+        "instruction": "0x00000000",
+        "read_data1": 0,
+        "read_data2": 0,
+        "imm": 0,
+        "rs": 0,
+        "rt": 0,
+        "rd": 0,
+        "rt_rd": 0,
+        "RegWrite": 0,
+        "ALUSrc": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "ex_mem": {
+        "instruction": "0x110A0001",
+        "alu_result": 20,
+        "read_data2": 10,
+        "write_reg": 10,
+        "branch_target": "0x0000001C",
+        "RegWrite": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 1,
+        "nop": 0
+      },
+      "mem_wb": {
+        "instruction": "0x214B0005",
+        "alu_result": 15,
+        "mem_data": 0,
+        "write_reg": 11,
+        "RegWrite": 1,
+        "MemtoReg": 0,
+        "nop": 0
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "cycle": 9,
+      "pc": 32,
+      "stall": 0,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0x00000000",
+        "pc_plus_4": 32,
+        "nop": 1
+      },
+      "id_ex": {
+        "instruction": "0x00000000",
+        "read_data1": 0,
+        "read_data2": 0,
+        "imm": 0,
+        "rs": 0,
+        "rt": 0,
+        "rd": 0,
+        "rt_rd": 0,
+        "RegWrite": 0,
+        "ALUSrc": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "ex_mem": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "read_data2": 0,
+        "write_reg": 0,
+        "branch_target": "0x00000000",
+        "RegWrite": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "mem_wb": {
+        "instruction": "0x110A0001",
+        "alu_result": 20,
+        "mem_data": 0,
+        "write_reg": 10,
+        "RegWrite": 0,
+        "MemtoReg": 0,
+        "nop": 0
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 10, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "cycle": 10,
+      "pc": 36,
+      "stall": 0,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0x00000000",
+        "pc_plus_4": 36,
+        "nop": 1
+      },
+      "id_ex": {
+        "instruction": "0x00000000",
+        "read_data1": 0,
+        "read_data2": 0,
+        "imm": 0,
+        "rs": 0,
+        "rt": 0,
+        "rd": 0,
+        "rt_rd": 0,
+        "RegWrite": 0,
+        "ALUSrc": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "ex_mem": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "read_data2": 0,
+        "write_reg": 0,
+        "branch_target": "0x00000000",
+        "RegWrite": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "mem_wb": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "mem_data": 0,
+        "write_reg": 0,
+        "RegWrite": 0,
+        "MemtoReg": 0,
+        "nop": 1
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 10, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "cycle": 11,
+      "pc": 40,
+      "stall": 0,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0x00000000",
+        "pc_plus_4": 40,
+        "nop": 1
+      },
+      "id_ex": {
+        "instruction": "0x00000000",
+        "read_data1": 0,
+        "read_data2": 0,
+        "imm": 0,
+        "rs": 0,
+        "rt": 0,
+        "rd": 0,
+        "rt_rd": 0,
+        "RegWrite": 0,
+        "ALUSrc": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "ex_mem": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "read_data2": 0,
+        "write_reg": 0,
+        "branch_target": "0x00000000",
+        "RegWrite": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "mem_wb": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "mem_data": 0,
+        "write_reg": 0,
+        "RegWrite": 0,
+        "MemtoReg": 0,
+        "nop": 1
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 10, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "cycle": 12,
+      "pc": 44,
+      "stall": 0,
+      "flush": 0,
+      "if_id": {
+        "instruction": "0x00000000",
+        "pc_plus_4": 44,
+        "nop": 1
+      },
+      "id_ex": {
+        "instruction": "0x00000000",
+        "read_data1": 0,
+        "read_data2": 0,
+        "imm": 0,
+        "rs": 0,
+        "rt": 0,
+        "rd": 0,
+        "rt_rd": 0,
+        "RegWrite": 0,
+        "ALUSrc": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "ex_mem": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "read_data2": 0,
+        "write_reg": 0,
+        "branch_target": "0x00000000",
+        "RegWrite": 0,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemtoReg": 0,
+        "Branch": 0,
+        "nop": 1
+      },
+      "mem_wb": {
+        "instruction": "0x00000000",
+        "alu_result": 0,
+        "mem_data": 0,
+        "write_reg": 0,
+        "RegWrite": 0,
+        "MemtoReg": 0,
+        "nop": 1
+      },
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 10, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    }
+  ]
+}

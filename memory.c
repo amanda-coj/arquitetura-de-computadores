@@ -32,11 +32,23 @@ void load_program(void) {
     // SW $s0, 0($t1)
     instruction_memory[2] = 0xAD300000;
 
+    // LW $t2, 0($t1)          -> $t2 = mem[0x100] = 10
+    instruction_memory[3] = 0x8D2A0000;
+
+    // ADDI $t3, $t2, 5       -> $t3 = 15  (load-use stall: usa $t2 logo apos LW)
+    instruction_memory[4] = 0x214B0005;
+
+    // BEQ $t0, $t2, 1        -> branch tomado ($t0=$t2=10), flush
+    instruction_memory[5] = 0x110A0001;
+
+    // ADD $s1, $t3, $zero    -> nunca executa (alvo do flush)
+    instruction_memory[6] = 0x01608820;
+
     // NOPs para esvaziar pipeline
-    instruction_memory[3] = 0x00000000;
-    instruction_memory[4] = 0x00000000;
-    instruction_memory[5] = 0x00000000;
-    instruction_memory[6] = 0x00000000;
+    instruction_memory[7]  = 0x00000000;
+    instruction_memory[8]  = 0x00000000;
+    instruction_memory[9]  = 0x00000000;
+    instruction_memory[10] = 0x00000000;
 
     // Inicialização dos registradores
     registers[0]  = 0;       // $zero

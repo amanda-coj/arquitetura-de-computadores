@@ -67,6 +67,16 @@ void stage_IF(void) {
         return;
     }
     if (flush_pipeline) {
+        // remove trace da instrucao que estava em IF/ID e morreu pelo branch
+        unsigned int killed = IF_ID_old.instruction;
+        if (killed != 0) {
+            int idx = find_trace(killed);
+            if (idx >= 0) {
+                for (int i = idx; i < n_traces - 1; i++)
+                    traces[i] = traces[i + 1];
+                n_traces--;
+            }
+        }
         memset(&IF_ID_new, 0, sizeof(IF_ID_new));
         IF_ID_new.NOP  = 1;
         PC             = branch_address;
@@ -92,7 +102,7 @@ void stage_IF(void) {
 }
 
 void stage_ID(void) {
-    if (IF_ID_old.NOP || stall_pipeline) {
+    if (IF_ID_old.NOP || stall_pipeline || flush_pipeline) {
         memset(&ID_EX_new, 0, sizeof(ID_EX_new));
         ID_EX_new.NOP = 1;
         return;
@@ -316,6 +326,15 @@ static void print_mnemonic(InstrTrace *t) {
         case 0x04: printf("BEQ  %s, %s, %d",        reg_name(t->id_rs), reg_name(t->id_rt), t->id_imm); return;
         default:   printf("opcode=0x%02X", opcode); return;
     }
+}
+
+void stages_reset(void) {
+    memset(traces, 0, sizeof(traces));
+    n_traces              = 0;
+    if_fetch              = 0;
+    if_stall              = 0;
+    if_flush              = 0;
+    ex_branch_taken_total = 0;
 }
 
 void stages_print_stats(int total_cycles, int total_stalls) {
