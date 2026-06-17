@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulador MIPS Pipeline</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3450;
+    --accent: #4f8ef7;
+    --green: #3ecf8e;
+    --red: #f76e6e;
+    --yellow: #f7c948;
+    --text: #e0e4f0;
+    --muted: #6b7280;
+    --nop: #2e3450;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  header h1 { font-size: 18px; font-weight: 600; color: var(--accent); }
+  header .subtitle { color: var(--muted); font-size: 13px; }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+  }
+  button {
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: opacity .15s;
+  }
+  button:hover { opacity: .85; }
+  button:disabled { opacity: .35; cursor: not-allowed; }
+  #btn-next   { background: var(--accent); color: #fff; }
+  #btn-runall { background: var(--green);  color: #000; }
+  #btn-reset  { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+
+  .main { display: grid; grid-template-columns: 1fr 320px; gap: 16px; padding: 16px 24px; }
+
+  /* ---- Pipeline diagram ---- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .card-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .pipeline-stages {
+    display: flex;
+    gap: 6px;
+    align-items: stretch;
+  }
+  .stage-arrow {
+    display: flex;
+    align-items: center;
+    color: var(--border);
+    font-size: 20px;
+    padding: 0 2px;
+  }
+  .stage-box {
+    flex: 1;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    padding: 12px 8px;
+    text-align: center;
+    transition: border-color .2s, background .2s;
+    min-width: 0;
+  }
+  .stage-box.active   { border-color: var(--accent); background: rgba(79,142,247,.08); }
+  .stage-box.stall    { border-color: var(--yellow);  background: rgba(247,201,72,.08); }
+  .stage-box.flush    { border-color: var(--red);     background: rgba(247,110,110,.08); }
+  .stage-box.nop      { border-color: var(--nop);     background: transparent; }
+
+  .stage-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .stage-instr {
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 12px;
+    color: var(--text);
+    word-break: break-all;
+  }
+  .stage-instr.nop-text { color: var(--muted); }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: 6px;
+  }
+  .badge-stall { background: var(--yellow); color: #000; }
+  .badge-flush { background: var(--red);    color: #fff; }
+
+  /* ---- Stats row ---- */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .stat-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+  .stat-val { font-size: 28px; font-weight: 700; color: var(--accent); }
+  .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ---- Registers ---- */
+  .reg-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    max-height: 340px;
+    overflow-y: auto;
+  }
+  .reg-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 12px;
+    transition: background .3s;
+  }
+  .reg-row.changed { background: rgba(79,142,247,.18); }
+  .reg-name { color: var(--muted); }
+  .reg-val  { color: var(--text); }
+
+  /* ---- Registradores de pipeline ---- */
+  .pipe-regs { margin-top: 14px; }
+  .pipe-reg-section { margin-bottom: 14px; }
+  .pipe-reg-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .field-list { display: flex; flex-direction: column; gap: 3px; }
+  .field-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 11px;
+    padding: 2px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .field-key { color: var(--muted); }
+  .field-val { color: var(--text); }
+
+  /* ---- Log / Summary ---- */
+  .log-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 12px;
+    color: var(--text);
+    white-space: pre-wrap;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px;
+  }
+
+  .sidebar { display: flex; flex-direction: column; gap: 14px; }
+
+  .status-bar {
+    padding: 8px 24px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    display: flex;
+    gap: 24px;
+  }
+  .status-bar span b { color: var(--text); }
+
+  .done-banner {
+    display: none;
+    background: rgba(62,207,142,.12);
+    border: 1px solid var(--green);
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: var(--green);
+    font-weight: 600;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    max-height: 220px;
+    display: block;
+    overflow-y: auto;
+  }
+  .history-table th {
+    background: var(--surface2);
+    color: var(--muted);
+    padding: 4px 6px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+  }
+  .history-table td { padding: 3px 6px; border-bottom: 1px solid var(--border); }
+  .history-table tr:hover td { background: var(--surface2); }
+  .tag-stall { color: var(--yellow); font-weight: 700; }
+  .tag-flush { color: var(--red);    font-weight: 700; }
+  .tag-ok    { color: var(--green);  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Simulador MIPS Pipeline</h1>
+    <div class="subtitle">5 estágios · Detecção de hazards · Stall &amp; Flush</div>
+  </div>
+  <div class="controls">
+    <button id="btn-next">▶ Próximo Ciclo</button>
+    <button id="btn-runall">⚡ Executar Tudo</button>
+    <button id="btn-reset">↺ Reset</button>
+  </div>
+</header>
+
+<div class="main">
+  <!-- Coluna principal -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+
+    <!-- Pipeline diagram -->
+    <div class="card">
+      <div class="card-title">Diagrama de Pipeline — Ciclo <span id="cycle-num">—</span> &nbsp;|&nbsp; PC: <span id="pc-val">—</span></div>
+      <div class="pipeline-stages" id="pipeline-stages">
+        <!-- gerado por JS -->
+      </div>
+      <div id="done-banner" class="done-banner">✓ Simulação concluída</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-val" id="stat-cycle">0</div><div class="stat-lbl">Ciclos</div></div>
+      <div class="stat-card"><div class="stat-val" id="stat-stalls" style="color:var(--yellow)">0</div><div class="stat-lbl">Stalls</div></div>
+      <div class="stat-card"><div class="stat-val" id="stat-flushes" style="color:var(--red)">0</div><div class="stat-lbl">Flushes</div></div>
+      <div class="stat-card"><div class="stat-val" id="stat-cpi" style="color:var(--green)">—</div><div class="stat-lbl">CPI estimado</div></div>
+    </div>
+
+    <!-- Histórico de ciclos -->
+    <div class="card">
+      <div class="card-title">Histórico de Ciclos</div>
+      <table class="history-table" id="history-table">
+        <thead><tr>
+          <th>Ciclo</th>
+          <th>IF</th><th>ID</th><th>EX</th><th>MEM</th><th>WB</th>
+          <th>PC</th><th>Evento</th>
+        </tr></thead>
+        <tbody id="history-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Registradores de pipeline -->
+    <div class="card">
+      <div class="card-title">Registradores de Pipeline</div>
+      <div class="pipe-regs" id="pipe-regs">
+        <span style="color:var(--muted);font-size:12px;">Execute um ciclo para ver os dados.</span>
+      </div>
+    </div>
+
+    <!-- Resumo final -->
+    <div class="card" id="summary-card" style="display:none">
+      <div class="card-title">Resumo Final</div>
+      <div class="log-box" id="summary-box"></div>
+    </div>
+
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+
+    <div class="card">
+      <div class="card-title">Banco de Registradores</div>
+      <div class="reg-grid" id="reg-grid">
+        <!-- gerado por JS -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="status-bar">
+  <span>Status: <b id="status-text">Aguardando</b></span>
+  <span>Ciclo atual: <b id="status-cycle">—</b></span>
+  <span>PC: <b id="status-pc">—</b></span>
+</div>
+
+<script>
+const REG_NAMES = [
+  '$zero','$at','$v0','$v1','$a0','$a1','$a2','$a3',
+  '$t0','$t1','$t2','$t3','$t4','$t5','$t6','$t7',
+  '$s0','$s1','$s2','$s3','$s4','$s5','$s6','$s7',
+  '$t8','$t9','$k0','$k1','$gp','$sp','$fp','$ra'
+];
+
+const STAGES = ['IF','ID','EX','MEM','WB'];
+const STAGE_COLORS = {
+  IF: '#4f8ef7', ID: '#a78bfa', EX: '#f7c948', MEM: '#3ecf8e', WB: '#f76e6e'
+};
+
+let totalStalls = 0;
+let totalFlushes = 0;
+let currentCycle = 0;
+let done = false;
+let prevRegs = new Array(32).fill(0);
+
+// ---- Init pipeline diagram ----
+function initPipelineDiagram() {
+  const container = document.getElementById('pipeline-stages');
+  container.innerHTML = '';
+  STAGES.forEach((s, i) => {
+    if (i > 0) {
+      const arr = document.createElement('div');
+      arr.className = 'stage-arrow';
+      arr.textContent = '→';
+      container.appendChild(arr);
+    }
+    const box = document.createElement('div');
+    box.className = 'stage-box nop';
+    box.id = 'stage-' + s;
+    box.innerHTML = `<div class="stage-label" style="color:${STAGE_COLORS[s]}">${s}</div>
+                     <div class="stage-instr nop-text" id="instr-${s}">—</div>`;
+    container.appendChild(box);
+  });
+}
+
+// ---- Init register grid ----
+function initRegGrid() {
+  const grid = document.getElementById('reg-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 32; i++) {
+    const row = document.createElement('div');
+    row.className = 'reg-row';
+    row.id = 'reg-' + i;
+    row.innerHTML = `<span class="reg-name">${REG_NAMES[i]}</span><span class="reg-val" id="regval-${i}">0</span>`;
+    grid.appendChild(row);
+  }
+}
+
+function updateRegisters(regs) {
+  for (let i = 0; i < 32; i++) {
+    const el = document.getElementById('regval-' + i);
+    const row = document.getElementById('reg-' + i);
+    el.textContent = regs[i];
+    if (regs[i] !== prevRegs[i]) {
+      row.classList.add('changed');
+    } else {
+      row.classList.remove('changed');
+    }
+  }
+  prevRegs = [...regs];
+}
+
+function updatePipeline(data) {
+  const view = data.pipeline_view;
+  const isStall = data.stall;
+  const isFlush = data.flush;
+
+  view.forEach(slot => {
+    const box = document.getElementById('stage-' + slot.stage);
+    const instrEl = document.getElementById('instr-' + slot.stage);
+    box.className = 'stage-box';
+    let badge = '';
+
+    if (!slot.active) {
+      box.classList.add('nop');
+      instrEl.className = 'stage-instr nop-text';
+      instrEl.textContent = 'NOP';
+    } else {
+      // Estágio ID recebe stall, IF recebe flush
+      if (isStall && slot.stage === 'ID') {
+        box.classList.add('stall');
+        badge = '<span class="badge badge-stall">STALL</span>';
+      } else if (isFlush && (slot.stage === 'IF' || slot.stage === 'ID')) {
+        box.classList.add('flush');
+        badge = '<span class="badge badge-flush">FLUSH</span>';
+      } else {
+        box.classList.add('active');
+      }
+      instrEl.className = 'stage-instr';
+      instrEl.textContent = slot.instr;
+    }
+    // append badge
+    const existing = box.querySelector('.badge');
+    if (existing) existing.remove();
+    if (badge) box.insertAdjacentHTML('beforeend', badge);
+  });
+}
+
+function updatePipelineRegs(data) {
+  const sections = [
+    { key: 'if_id',  label: 'IF/ID',  fields: ['instruction','pc_plus_4','nop'] },
+    { key: 'id_ex',  label: 'ID/EX',  fields: ['instruction','read_data1','read_data2','imm','rs','rt','rd','RegWrite','ALUSrc','MemRead','MemWrite','MemtoReg','Branch','nop'] },
+    { key: 'ex_mem', label: 'EX/MEM', fields: ['instruction','alu_result','read_data2','write_reg','branch_target','RegWrite','MemRead','MemWrite','MemtoReg','Branch','nop'] },
+    { key: 'mem_wb', label: 'MEM/WB', fields: ['instruction','alu_result','mem_data','write_reg','RegWrite','MemtoReg','nop'] },
+  ];
+
+  const container = document.getElementById('pipe-regs');
+  container.innerHTML = '';
+
+  sections.forEach(sec => {
+    const reg = data[sec.key];
+    if (!reg) return;
+    const div = document.createElement('div');
+    div.className = 'pipe-reg-section';
+    div.innerHTML = `<div class="pipe-reg-title" style="color:${sec.label==='IF/ID'?'#4f8ef7':sec.label==='ID/EX'?'#a78bfa':sec.label==='EX/MEM'?'#f7c948':'#3ecf8e'}">${sec.label}</div>
+      <div class="field-list">${sec.fields.map(f=>`<div class="field-row"><span class="field-key">${f}</span><span class="field-val">${reg[f] ?? '—'}</span></div>`).join('')}</div>`;
+    container.appendChild(div);
+  });
+}
+
+function addHistoryRow(data) {
+  const tbody = document.getElementById('history-body');
+  const tr = document.createElement('tr');
+  const view = data.pipeline_view;
+  const getInstr = stage => {
+    const s = view.find(v => v.stage === stage);
+    return s && s.active ? s.instr : '<span style="color:var(--muted)">NOP</span>';
+  };
+  let evento = '<span class="tag-ok">—</span>';
+  if (data.stall) evento = '<span class="tag-stall">STALL</span>';
+  if (data.flush) evento = '<span class="tag-flush">FLUSH</span>';
+
+  tr.innerHTML = `<td>${data.cycle}</td>
+    <td>${getInstr('IF')}</td><td>${getInstr('ID')}</td>
+    <td>${getInstr('EX')}</td><td>${getInstr('MEM')}</td><td>${getInstr('WB')}</td>
+    <td>0x${data.pc.toString(16).padStart(3,'0').toUpperCase()}</td>
+    <td>${evento}</td>`;
+  tbody.appendChild(tr);
+  tbody.parentElement.scrollTop = tbody.parentElement.scrollHeight;
+}
+
+function updateStats() {
+  document.getElementById('stat-cycle').textContent   = currentCycle;
+  document.getElementById('stat-stalls').textContent  = totalStalls;
+  document.getElementById('stat-flushes').textContent = totalFlushes;
+  const instrCount = currentCycle - totalStalls - totalFlushes;
+  const cpi = instrCount > 0 ? (currentCycle / instrCount).toFixed(2) : '—';
+  document.getElementById('stat-cpi').textContent = cpi;
+  document.getElementById('status-cycle').textContent = currentCycle;
+}
+
+function applySnapshot(data, summary) {
+  if (!data) return;
+
+  if (data.status === 'done') {
+    done = true;
+    document.getElementById('done-banner').style.display = 'block';
+    document.getElementById('btn-next').disabled = true;
+    document.getElementById('status-text').textContent = 'Concluído';
+    if (summary) showSummary(summary);
+    return;
+  }
+
+  currentCycle = data.cycle + 1;
+  if (data.stall) totalStalls++;
+  if (data.flush) totalFlushes++;
+
+  document.getElementById('cycle-num').textContent = data.cycle;
+  document.getElementById('pc-val').textContent = '0x' + data.pc.toString(16).toUpperCase().padStart(3,'0');
+  document.getElementById('status-pc').textContent = '0x' + data.pc.toString(16).toUpperCase().padStart(3,'0');
+  document.getElementById('status-text').textContent = data.stall ? 'STALL' : data.flush ? 'FLUSH' : 'Executando';
+
+  updatePipeline(data);
+  updateRegisters(data.registers);
+  updatePipelineRegs(data);
+  addHistoryRow(data);
+  updateStats();
+
+  if (summary) showSummary(summary);
+}
+
+function showSummary(text) {
+  if (!text.trim()) return;
+  document.getElementById('summary-card').style.display = 'block';
+  document.getElementById('summary-box').textContent = text;
+}
+
+async function apiNext() {
+  setLoading(true);
+  const res = await fetch('/api/next', { method: 'POST' });
+  const json = await res.json();
+  applySnapshot(json.data, json.summary);
+  setLoading(false);
+}
+
+async function apiRunAll() {
+  setLoading(true);
+  document.getElementById('btn-runall').disabled = true;
+  document.getElementById('btn-next').disabled = true;
+  const res = await fetch('/api/run_all', { method: 'POST' });
+  const json = await res.json();
+
+  if (json.trace && json.trace.cycles) {
+    // replay todos os ciclos
+    totalStalls = 0; totalFlushes = 0; currentCycle = 0;
+    document.getElementById('history-body').innerHTML = '';
+    json.trace.cycles.forEach(c => applySnapshot(c, ''));
+    done = true;
+    document.getElementById('done-banner').style.display = 'block';
+    document.getElementById('btn-next').disabled = true;
+    document.getElementById('status-text').textContent = 'Concluído';
+  }
+  if (json.summary) showSummary(json.summary);
+  setLoading(false);
+}
+
+async function apiReset() {
+  const res = await fetch('/api/reset', { method: 'POST' });
+  totalStalls = 0; totalFlushes = 0; currentCycle = 0; done = false;
+  prevRegs = new Array(32).fill(0);
+  initPipelineDiagram();
+  initRegGrid();
+  document.getElementById('cycle-num').textContent = '—';
+  document.getElementById('pc-val').textContent = '—';
+  document.getElementById('done-banner').style.display = 'none';
+  document.getElementById('history-body').innerHTML = '';
+  document.getElementById('pipe-regs').innerHTML = '<span style="color:var(--muted);font-size:12px;">Execute um ciclo para ver os dados.</span>';
+  document.getElementById('summary-card').style.display = 'none';
+  document.getElementById('btn-next').disabled = false;
+  document.getElementById('btn-runall').disabled = false;
+  document.getElementById('status-text').textContent = 'Aguardando';
+  document.getElementById('status-cycle').textContent = '—';
+  document.getElementById('status-pc').textContent = '—';
+  updateStats();
+}
+
+function setLoading(v) {
+  document.getElementById('btn-next').disabled = v || done;
+  document.getElementById('btn-reset').disabled = v;
+}
+
+document.getElementById('btn-next').addEventListener('click', apiNext);
+document.getElementById('btn-runall').addEventListener('click', apiRunAll);
+document.getElementById('btn-reset').addEventListener('click', apiReset);
+
+initPipelineDiagram();
+initRegGrid();
+</script>
+</body>
+</html>
