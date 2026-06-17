@@ -5,6 +5,13 @@
       "pc": 4,
       "stall": 0,
       "flush": 0,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "ADDI $t0,$zero,10", "active": true },
+        { "stage": "ID", "instr": "---", "active": false },
+        { "stage": "EX", "instr": "---", "active": false },
+        { "stage": "MEM", "instr": "---", "active": false },
+        { "stage": "WB", "instr": "---", "active": false }
+      ],
       "if_id": {
         "instruction": "0x2008000A",
         "pc_plus_4": 4,
@@ -56,6 +63,13 @@
       "pc": 8,
       "stall": 0,
       "flush": 0,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "ADD $s0,$t0,$zero", "active": true },
+        { "stage": "ID", "instr": "ADDI $t0,$zero,10", "active": true },
+        { "stage": "EX", "instr": "---", "active": false },
+        { "stage": "MEM", "instr": "---", "active": false },
+        { "stage": "WB", "instr": "---", "active": false }
+      ],
       "if_id": {
         "instruction": "0x01008020",
         "pc_plus_4": 8,
@@ -107,6 +121,13 @@
       "pc": 12,
       "stall": 0,
       "flush": 0,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "SW   $s0,0($t1)", "active": true },
+        { "stage": "ID", "instr": "ADD $s0,$t0,$zero", "active": true },
+        { "stage": "EX", "instr": "ADDI $t0,$zero,10", "active": true },
+        { "stage": "MEM", "instr": "---", "active": false },
+        { "stage": "WB", "instr": "---", "active": false }
+      ],
       "if_id": {
         "instruction": "0xAD300000",
         "pc_plus_4": 12,
@@ -158,6 +179,13 @@
       "pc": 16,
       "stall": 0,
       "flush": 0,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "LW   $t2,0($t1)", "active": true },
+        { "stage": "ID", "instr": "SW   $s0,0($t1)", "active": true },
+        { "stage": "EX", "instr": "ADD $s0,$t0,$zero", "active": true },
+        { "stage": "MEM", "instr": "ADDI $t0,$zero,10", "active": true },
+        { "stage": "WB", "instr": "---", "active": false }
+      ],
       "if_id": {
         "instruction": "0x8D2A0000",
         "pc_plus_4": 16,
@@ -209,6 +237,13 @@
       "pc": 20,
       "stall": 0,
       "flush": 0,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "ADDI $t3,$t2,5", "active": true },
+        { "stage": "ID", "instr": "LW   $t2,0($t1)", "active": true },
+        { "stage": "EX", "instr": "SW   $s0,0($t1)", "active": true },
+        { "stage": "MEM", "instr": "ADD $s0,$t0,$zero", "active": true },
+        { "stage": "WB", "instr": "ADDI $t0,$zero,10", "active": true }
+      ],
       "if_id": {
         "instruction": "0x214B0005",
         "pc_plus_4": 20,
@@ -260,6 +295,13 @@
       "pc": 20,
       "stall": 1,
       "flush": 0,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "ADDI $t3,$t2,5", "active": true },
+        { "stage": "ID", "instr": "---", "active": false },
+        { "stage": "EX", "instr": "LW   $t2,0($t1)", "active": true },
+        { "stage": "MEM", "instr": "SW   $s0,0($t1)", "active": true },
+        { "stage": "WB", "instr": "ADD $s0,$t0,$zero", "active": true }
+      ],
       "if_id": {
         "instruction": "0x214B0005",
         "pc_plus_4": 20,
@@ -311,6 +353,13 @@
       "pc": 24,
       "stall": 0,
       "flush": 0,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "BEQ  $t0,$t2,1", "active": true },
+        { "stage": "ID", "instr": "ADDI $t3,$t2,5", "active": true },
+        { "stage": "EX", "instr": "---", "active": false },
+        { "stage": "MEM", "instr": "LW   $t2,0($t1)", "active": true },
+        { "stage": "WB", "instr": "SW   $s0,0($t1)", "active": true }
+      ],
       "if_id": {
         "instruction": "0x110A0001",
         "pc_plus_4": 24,
@@ -362,6 +411,13 @@
       "pc": 28,
       "stall": 0,
       "flush": 0,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "ADD $s1,$t3,$zero", "active": true },
+        { "stage": "ID", "instr": "BEQ  $t0,$t2,1", "active": true },
+        { "stage": "EX", "instr": "ADDI $t3,$t2,5", "active": true },
+        { "stage": "MEM", "instr": "---", "active": false },
+        { "stage": "WB", "instr": "LW   $t2,0($t1)", "active": true }
+      ],
       "if_id": {
         "instruction": "0x01608820",
         "pc_plus_4": 28,
@@ -412,7 +468,14 @@
       "cycle": 8,
       "pc": 28,
       "stall": 0,
-      "flush": 0,
+      "flush": 1,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "---", "active": false },
+        { "stage": "ID", "instr": "---", "active": false },
+        { "stage": "EX", "instr": "BEQ  $t0,$t2,1", "active": true },
+        { "stage": "MEM", "instr": "ADDI $t3,$t2,5", "active": true },
+        { "stage": "WB", "instr": "---", "active": false }
+      ],
       "if_id": {
         "instruction": "0x00000000",
         "pc_plus_4": 0,
@@ -464,6 +527,13 @@
       "pc": 32,
       "stall": 0,
       "flush": 0,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "---", "active": false },
+        { "stage": "ID", "instr": "---", "active": false },
+        { "stage": "EX", "instr": "---", "active": false },
+        { "stage": "MEM", "instr": "BEQ  $t0,$t2,1", "active": true },
+        { "stage": "WB", "instr": "ADDI $t3,$t2,5", "active": true }
+      ],
       "if_id": {
         "instruction": "0x00000000",
         "pc_plus_4": 32,
@@ -515,6 +585,13 @@
       "pc": 36,
       "stall": 0,
       "flush": 0,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "---", "active": false },
+        { "stage": "ID", "instr": "---", "active": false },
+        { "stage": "EX", "instr": "---", "active": false },
+        { "stage": "MEM", "instr": "---", "active": false },
+        { "stage": "WB", "instr": "BEQ  $t0,$t2,1", "active": true }
+      ],
       "if_id": {
         "instruction": "0x00000000",
         "pc_plus_4": 36,
@@ -566,6 +643,13 @@
       "pc": 40,
       "stall": 0,
       "flush": 0,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "---", "active": false },
+        { "stage": "ID", "instr": "---", "active": false },
+        { "stage": "EX", "instr": "---", "active": false },
+        { "stage": "MEM", "instr": "---", "active": false },
+        { "stage": "WB", "instr": "---", "active": false }
+      ],
       "if_id": {
         "instruction": "0x00000000",
         "pc_plus_4": 40,
@@ -617,6 +701,13 @@
       "pc": 44,
       "stall": 0,
       "flush": 0,
+      "pipeline_view": [
+        { "stage": "IF", "instr": "---", "active": false },
+        { "stage": "ID", "instr": "---", "active": false },
+        { "stage": "EX", "instr": "---", "active": false },
+        { "stage": "MEM", "instr": "---", "active": false },
+        { "stage": "WB", "instr": "---", "active": false }
+      ],
       "if_id": {
         "instruction": "0x00000000",
         "pc_plus_4": 44,

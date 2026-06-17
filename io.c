@@ -8,11 +8,53 @@
 static CycleSnapshot snapshots[MAX_CYCLES];
 static int           n_snapshots = 0;
 
+// ---------------------------------------------------------------------------
+// Decodificador de mnemônico
+// ---------------------------------------------------------------------------
+
+static const char *rname(unsigned int r) {
+    static const char *n[32] = {
+        "$zero","$at","$v0","$v1","$a0","$a1","$a2","$a3",
+        "$t0","$t1","$t2","$t3","$t4","$t5","$t6","$t7",
+        "$s0","$s1","$s2","$s3","$s4","$s5","$s6","$s7",
+        "$t8","$t9","$k0","$k1","$gp","$sp","$fp","$ra"
+    };
+    return r < 32 ? n[r] : "?";
+}
+
+static void instr_mnemonic(unsigned int inst, char *buf, int len) {
+    if (inst == 0x00000000) { snprintf(buf, len, "NOP"); return; }
+    unsigned int op  = (inst >> 26) & 0x3F;
+    unsigned int rs  = (inst >> 21) & 0x1F;
+    unsigned int rt  = (inst >> 16) & 0x1F;
+    unsigned int rd  = (inst >> 11) & 0x1F;
+    int          imm = (int)(short)(inst & 0xFFFF);
+    switch (op) {
+        case 0x00:
+            switch (inst & 0x3F) {
+                case 0x20: snprintf(buf,len,"ADD %s,%s,%s",  rname(rd),rname(rs),rname(rt)); return;
+                case 0x22: snprintf(buf,len,"SUB %s,%s,%s",  rname(rd),rname(rs),rname(rt)); return;
+                case 0x24: snprintf(buf,len,"AND %s,%s,%s",  rname(rd),rname(rs),rname(rt)); return;
+                case 0x25: snprintf(buf,len,"OR  %s,%s,%s",  rname(rd),rname(rs),rname(rt)); return;
+                case 0x2A: snprintf(buf,len,"SLT %s,%s,%s",  rname(rd),rname(rs),rname(rt)); return;
+                default:   snprintf(buf,len,"R?%02X", inst & 0x3F); return;
+            }
+        case 0x08: snprintf(buf,len,"ADDI %s,%s,%d",  rname(rt),rname(rs),imm); return;
+        case 0x23: snprintf(buf,len,"LW   %s,%d(%s)", rname(rt),imm,rname(rs)); return;
+        case 0x2B: snprintf(buf,len,"SW   %s,%d(%s)", rname(rt),imm,rname(rs)); return;
+        case 0x04: snprintf(buf,len,"BEQ  %s,%s,%d",  rname(rs),rname(rt),imm); return;
+        default:   snprintf(buf,len,"0x%08X", inst); return;
+    }
+}
+
+// ---------------------------------------------------------------------------
+
 void io_reset(void) {
     n_snapshots = 0;
 }
 
-void io_record_cycle(int cycle, int stall, int flush) {
+void io_record_cycle(int cycle, int stall, int flush,
+                     unsigned int wb_instr, int wb_nop) {
     if (n_snapshots >= MAX_CYCLES) return;
 
     CycleSnapshot *s = &snapshots[n_snapshots++];
@@ -25,9 +67,44 @@ void io_record_cycle(int cycle, int stall, int flush) {
     s->ex_mem = EX_MEM_old;
     s->mem_wb = MEM_WB_old;
     memcpy(s->registers, registers, sizeof(registers));
+
+    // IF: conteúdo de IF_ID após update = instrução que acabou de sair de IF
+    instr_mnemonic(IF_ID_old.instruction, s->pipeline_view[0].mnemonic, 48);
+    s->pipeline_view[0].active = !IF_ID_old.NOP;
+
+    // ID: conteúdo de ID_EX após update = instrução que acabou de sair de ID
+    instr_mnemonic(ID_EX_old.instruction, s->pipeline_view[1].mnemonic, 48);
+    s->pipeline_view[1].active = !ID_EX_old.NOP;
+
+    // EX: conteúdo de EX_MEM após update
+    instr_mnemonic(EX_MEM_old.instruction, s->pipeline_view[2].mnemonic, 48);
+    s->pipeline_view[2].active = !EX_MEM_old.NOP;
+
+    // MEM: conteúdo de MEM_WB após update
+    instr_mnemonic(MEM_WB_old.instruction, s->pipeline_view[3].mnemonic, 48);
+    s->pipeline_view[3].active = !MEM_WB_old.NOP;
+
+    // WB: capturado antes do update (instrução que acabou de escrever back)
+    instr_mnemonic(wb_instr, s->pipeline_view[4].mnemonic, 48);
+    s->pipeline_view[4].active = !wb_nop;
 }
 
 // ---------------------------------------------------------------------------
+// Helpers de saída JSON
+// ---------------------------------------------------------------------------
+
+static void write_pipeline_view(FILE *f, CycleSnapshot *s) {
+    static const char *stages[5] = {"IF","ID","EX","MEM","WB"};
+    fprintf(f, "  \"pipeline_view\": [\n");
+    for (int i = 0; i < 5; i++) {
+        fprintf(f, "    { \"stage\": \"%s\", \"instr\": \"%s\", \"active\": %s }%s\n",
+                stages[i],
+                s->pipeline_view[i].active ? s->pipeline_view[i].mnemonic : "---",
+                s->pipeline_view[i].active ? "true" : "false",
+                i < 4 ? "," : "");
+    }
+    fprintf(f, "  ]");
+}
 
 static void write_if_id(FILE *f, IF_ID_Register *r) {
     fprintf(f, "  \"if_id\": {\n");
@@ -100,6 +177,7 @@ static void write_snapshot(FILE *f, CycleSnapshot *s) {
     fprintf(f, "  \"pc\": %u,\n",     s->pc);
     fprintf(f, "  \"stall\": %d,\n",  s->stall);
     fprintf(f, "  \"flush\": %d,\n",  s->flush);
+    write_pipeline_view(f, s); fprintf(f, ",\n");
     write_if_id(f,  &s->if_id);  fprintf(f, ",\n");
     write_id_ex(f,  &s->id_ex);  fprintf(f, ",\n");
     write_ex_mem(f, &s->ex_mem); fprintf(f, ",\n");
@@ -119,7 +197,6 @@ void io_write_json(const char *path) {
 
     fprintf(f, "{\n  \"cycles\": [\n");
     for (int i = 0; i < n_snapshots; i++) {
-        // reindenta para encaixar dentro do array
         CycleSnapshot *s = &snapshots[i];
         fprintf(f, "    {\n");
         fprintf(f, "      \"cycle\": %d,\n",  s->cycle);
@@ -127,7 +204,18 @@ void io_write_json(const char *path) {
         fprintf(f, "      \"stall\": %d,\n",  s->stall);
         fprintf(f, "      \"flush\": %d,\n",  s->flush);
 
-        // reutiliza helpers com indentacao extra via fprintf direto
+        // pipeline_view
+        fprintf(f, "      \"pipeline_view\": [\n");
+        static const char *stages[5] = {"IF","ID","EX","MEM","WB"};
+        for (int k = 0; k < 5; k++) {
+            fprintf(f, "        { \"stage\": \"%s\", \"instr\": \"%s\", \"active\": %s }%s\n",
+                    stages[k],
+                    s->pipeline_view[k].active ? s->pipeline_view[k].mnemonic : "---",
+                    s->pipeline_view[k].active ? "true" : "false",
+                    k < 4 ? "," : "");
+        }
+        fprintf(f, "      ],\n");
+
         fprintf(f, "      \"if_id\": {\n");
         fprintf(f, "        \"instruction\": \"0x%08X\",\n", s->if_id.instruction);
         fprintf(f, "        \"pc_plus_4\": %u,\n",            s->if_id.pc_plus_4);
