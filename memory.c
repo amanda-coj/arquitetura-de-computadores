@@ -29,11 +29,11 @@ void load_program(void) {
     // ADD $s0, $t0, $zero
     instruction_memory[1] = 0x01008020;
 
-    // SW $s0, 0($t1)
-    instruction_memory[2] = 0xAD300000;
+    // SW $s0, 0($zero)
+    instruction_memory[2] = 0xAC100000;
 
-    // LW $t2, 0($t1)          -> $t2 = mem[0x100] = 10
-    instruction_memory[3] = 0x8D2A0000;
+    // LW $t2, 0($zero)        -> $t2 = mem[0x000] = 10  (load-use stall com inst seguinte)
+    instruction_memory[3] = 0x8C0A0000;
 
     // ADDI $t3, $t2, 5       -> $t3 = 15  (load-use stall: usa $t2 logo apos LW)
     instruction_memory[4] = 0x214B0005;
@@ -50,8 +50,5 @@ void load_program(void) {
     instruction_memory[9]  = 0x00000000;
     instruction_memory[10] = 0x00000000;
 
-    // Inicialização dos registradores
-    registers[0]  = 0;       // $zero
-    registers[9]  = 0x100;   // $t1 = endereço 256
-    registers[16] = 0;       // $s0
+    registers[0] = 0; // $zero (sempre 0)
 }

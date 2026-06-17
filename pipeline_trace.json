@@ -56,7 +56,7 @@
         "MemtoReg": 0,
         "nop": 1
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       "cycle": 1,
@@ -114,7 +114,7 @@
         "MemtoReg": 0,
         "nop": 1
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       "cycle": 2,
@@ -122,14 +122,14 @@
       "stall": 0,
       "flush": 0,
       "pipeline_view": [
-        { "stage": "IF", "instr": "SW   $s0,0($t1)", "active": true },
+        { "stage": "IF", "instr": "SW   $s0,0($zero)", "active": true },
         { "stage": "ID", "instr": "ADD $s0,$t0,$zero", "active": true },
         { "stage": "EX", "instr": "ADDI $t0,$zero,10", "active": true },
         { "stage": "MEM", "instr": "---", "active": false },
         { "stage": "WB", "instr": "---", "active": false }
       ],
       "if_id": {
-        "instruction": "0xAD300000",
+        "instruction": "0xAC100000",
         "pc_plus_4": 12,
         "nop": 0
       },
@@ -172,7 +172,7 @@
         "MemtoReg": 0,
         "nop": 1
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       "cycle": 3,
@@ -180,23 +180,23 @@
       "stall": 0,
       "flush": 0,
       "pipeline_view": [
-        { "stage": "IF", "instr": "LW   $t2,0($t1)", "active": true },
-        { "stage": "ID", "instr": "SW   $s0,0($t1)", "active": true },
+        { "stage": "IF", "instr": "LW   $t2,0($zero)", "active": true },
+        { "stage": "ID", "instr": "SW   $s0,0($zero)", "active": true },
         { "stage": "EX", "instr": "ADD $s0,$t0,$zero", "active": true },
         { "stage": "MEM", "instr": "ADDI $t0,$zero,10", "active": true },
         { "stage": "WB", "instr": "---", "active": false }
       ],
       "if_id": {
-        "instruction": "0x8D2A0000",
+        "instruction": "0x8C0A0000",
         "pc_plus_4": 16,
         "nop": 0
       },
       "id_ex": {
-        "instruction": "0xAD300000",
-        "read_data1": 256,
+        "instruction": "0xAC100000",
+        "read_data1": 0,
         "read_data2": 0,
         "imm": 0,
-        "rs": 9,
+        "rs": 0,
         "rt": 16,
         "rd": 0,
         "rt_rd": 16,
@@ -230,7 +230,7 @@
         "MemtoReg": 0,
         "nop": 0
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       "cycle": 4,
@@ -239,8 +239,8 @@
       "flush": 0,
       "pipeline_view": [
         { "stage": "IF", "instr": "ADDI $t3,$t2,5", "active": true },
-        { "stage": "ID", "instr": "LW   $t2,0($t1)", "active": true },
-        { "stage": "EX", "instr": "SW   $s0,0($t1)", "active": true },
+        { "stage": "ID", "instr": "LW   $t2,0($zero)", "active": true },
+        { "stage": "EX", "instr": "SW   $s0,0($zero)", "active": true },
         { "stage": "MEM", "instr": "ADD $s0,$t0,$zero", "active": true },
         { "stage": "WB", "instr": "ADDI $t0,$zero,10", "active": true }
       ],
@@ -250,11 +250,11 @@
         "nop": 0
       },
       "id_ex": {
-        "instruction": "0x8D2A0000",
-        "read_data1": 256,
+        "instruction": "0x8C0A0000",
+        "read_data1": 0,
         "read_data2": 0,
         "imm": 0,
-        "rs": 9,
+        "rs": 0,
         "rt": 10,
         "rd": 0,
         "rt_rd": 10,
@@ -267,8 +267,8 @@
         "nop": 0
       },
       "ex_mem": {
-        "instruction": "0xAD300000",
-        "alu_result": 256,
+        "instruction": "0xAC100000",
+        "alu_result": 0,
         "read_data2": 10,
         "write_reg": 16,
         "branch_target": "0x0000000C",
@@ -288,7 +288,7 @@
         "MemtoReg": 0,
         "nop": 0
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       "cycle": 5,
@@ -298,8 +298,8 @@
       "pipeline_view": [
         { "stage": "IF", "instr": "ADDI $t3,$t2,5", "active": true },
         { "stage": "ID", "instr": "---", "active": false },
-        { "stage": "EX", "instr": "LW   $t2,0($t1)", "active": true },
-        { "stage": "MEM", "instr": "SW   $s0,0($t1)", "active": true },
+        { "stage": "EX", "instr": "LW   $t2,0($zero)", "active": true },
+        { "stage": "MEM", "instr": "SW   $s0,0($zero)", "active": true },
         { "stage": "WB", "instr": "ADD $s0,$t0,$zero", "active": true }
       ],
       "if_id": {
@@ -325,8 +325,8 @@
         "nop": 1
       },
       "ex_mem": {
-        "instruction": "0x8D2A0000",
-        "alu_result": 256,
+        "instruction": "0x8C0A0000",
+        "alu_result": 0,
         "read_data2": 0,
         "write_reg": 10,
         "branch_target": "0x00000010",
@@ -338,15 +338,15 @@
         "nop": 0
       },
       "mem_wb": {
-        "instruction": "0xAD300000",
-        "alu_result": 256,
+        "instruction": "0xAC100000",
+        "alu_result": 0,
         "mem_data": 0,
         "write_reg": 16,
         "RegWrite": 0,
         "MemtoReg": 0,
         "nop": 0
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       "cycle": 6,
@@ -357,8 +357,8 @@
         { "stage": "IF", "instr": "BEQ  $t0,$t2,1", "active": true },
         { "stage": "ID", "instr": "ADDI $t3,$t2,5", "active": true },
         { "stage": "EX", "instr": "---", "active": false },
-        { "stage": "MEM", "instr": "LW   $t2,0($t1)", "active": true },
-        { "stage": "WB", "instr": "SW   $s0,0($t1)", "active": true }
+        { "stage": "MEM", "instr": "LW   $t2,0($zero)", "active": true },
+        { "stage": "WB", "instr": "SW   $s0,0($zero)", "active": true }
       ],
       "if_id": {
         "instruction": "0x110A0001",
@@ -396,15 +396,15 @@
         "nop": 1
       },
       "mem_wb": {
-        "instruction": "0x8D2A0000",
-        "alu_result": 256,
+        "instruction": "0x8C0A0000",
+        "alu_result": 0,
         "mem_data": 10,
         "write_reg": 10,
         "RegWrite": 1,
         "MemtoReg": 1,
         "nop": 0
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       "cycle": 7,
@@ -416,7 +416,7 @@
         { "stage": "ID", "instr": "BEQ  $t0,$t2,1", "active": true },
         { "stage": "EX", "instr": "ADDI $t3,$t2,5", "active": true },
         { "stage": "MEM", "instr": "---", "active": false },
-        { "stage": "WB", "instr": "LW   $t2,0($t1)", "active": true }
+        { "stage": "WB", "instr": "LW   $t2,0($zero)", "active": true }
       ],
       "if_id": {
         "instruction": "0x01608820",
@@ -462,7 +462,7 @@
         "MemtoReg": 0,
         "nop": 1
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       "cycle": 8,
@@ -520,7 +520,7 @@
         "MemtoReg": 0,
         "nop": 0
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       "cycle": 9,
@@ -578,7 +578,7 @@
         "MemtoReg": 0,
         "nop": 0
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 10, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       "cycle": 10,
@@ -636,7 +636,7 @@
         "MemtoReg": 0,
         "nop": 1
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 10, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       "cycle": 11,
@@ -694,7 +694,7 @@
         "MemtoReg": 0,
         "nop": 1
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 10, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       "cycle": 12,
@@ -752,7 +752,7 @@
         "MemtoReg": 0,
         "nop": 1
       },
-      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 256, 10, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "registers": [0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }
   ]
 }
